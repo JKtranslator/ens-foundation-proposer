@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KPK proposer for the ENS Foundation Safe</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAHHklEQVR42u2bXUhTbxzHv+c8x20tmxKJSG/kSukiEKkwqOiF8jay94uyLLIwgqSppE6dsJXU7GIs5s0IySLoppAIxCAhJLBCepWy9YKQIJVD3DrnOf+b/3OY7UzP8mwz3APenJ2dPb/P+X1/v+/znCNntVplzOPBY56PNIA0gDSANIA0gDSANID5OwTNpHgelZWV2Lt3LywWCziO++sflWUZkiTh+fPncDgcGBkZAc/zoJRqmgelFAaDAXV1ddi5cyeMRiM4jsP4+Dju3buHGzduQJIkTXMhixcvbtJyYlVVFcrLy2EymWYVPADl+8uWLUNhYSG6u7sVMFqCt1gsuHr1KrZt24aMjAxwHAeO42A0GlFUVARBEPDs2TN9JXDw4EFQSmecZDwQKKUoLi7G8uXLQSkFz8eeDiEElFLk5eXB5/Nh/fr1UXdZlmVQSnH48GH9JWA0GnXVHgMZDocxMTExbQYQQiBJEgoKCnDt2jXk5uZCkiQQQqKgskyY00WQBcrzPG7evInR0VHwPK8KQBAESJKEjRs3wuv1Ijc3F5TSqODVrq9rBug1WKpzHIfr16+js7MzZgEkhEAURezevRt2ux0Gg2FGqUTWmDkHgE0+GAyiubkZjx8/Vg2epbIkSThw4AAuXrw45fspaYOzHUyzw8PDuHTpEoaGhhRtqwVPKcXp06dx8uRJUErBcZzuwScFAKvMhBA8ffoUDQ0N+Pnzp2rwLBtkWUZtbS3KysogSZIimZQaob9NeY7jQAjB7du34Xa7lTSOFbzRaITD4cD27dtVK/0/A4AFSilFW1sb7t69q6Txn5pnx7KysnDlyhUUFxcnJfiEAWCTHxsbQ2NjI/r7+5U292fwTAp5eXlwu92wWq1JCz4hANjkh4aGUFNTgy9fvqjqPTL4wsJCuN1u5OTkJDV4XY1QZLHr7e3FqVOnNAXPDE5OTs6MBmfOZkCkufH7/fB4PIq2pwu+tLQUdrsdGRkZCenxSQHAJh4Oh+F0OvHgwYOYeo+EcujQIVRXVyfM4OgOQJblqF7M9Do6Ooq6ujq8fPkyZspHVvs9e/aguro6oQZH9xrAcZyyyKCUQhRFEEIwODiIioqKGYNn7i47Oxvnz59XrpUog6M7gHA4rEyW53kIgoDu7m6cOXNG2dGZbheG3eWioiJkZmZCluWU3vm4AXi9XkxOTkIURQQCAbS1tcFutyMUCmnezgKA7OxsXTdWklYDOjs70dPTA6PRiK9fv0IURSUjtATPAg4EAnEBmzMZwPM8RkZG8OnTJ4iiqFR6rXeSpfzg4CDevXs3ZyBoBsBaFev3an6eEAJCiOrqjYESRREtLS2YnJyMe/cm5U6QUhql38gFjiRJkCRJOefPIscgvn//Hg6HY05kwayMEGuNsixj6dKlWLduHUwmEwKBAF68eDFlRRgJgRCCR48eYc2aNSgvL0+6/9cFAAuMEIKqqiqUlZVhwYIFyudv3ryBy+XC69evY0LweDywWq3YsmVLytwg9zfvCDHDk5WVhdbWVpSUlER1A7b3d+LECQwPD0dBYMGazWb4/X6sXLlSVwgbNmxIzGqQBW+1WtHR0YGSkhKIoqhonv2JoojMzEy4XC6YzeYpQUfCCgaDsNlsyrOBZNeEuKwwC37Tpk3w+XxYtWoVJEmCIAhRVZ/t5+fn58Nutyu+P/I8JoWPHz+iqakp7taadACSJGH//v1ob2+HxWKZcf3OgO3YsQMVFRXKBqfagqq3txc+n095BDbnAMiyjHPnzsFmsyk+QIte2RqhsrISW7duVYXAQHZ0dKCnp2faRVXKAFy4cAFHjx5VJqa1WEX6hKamJqxYsSIKHts74HkeLS0t+PDhQ9IyQTOAffv2Tdn5idcvAMCiRYtw+fJlpV1GXofpfmJiAjabDePj41OW4CkHIAjCrB5QMCmsXr0aDQ0NqhJixz5//ozGxkZFaomEEFcNmO1g2t61axeOHz+u6gBZPejr64PH40m4FPh403jWP/h/Jpw9exabN2+etjP4/X48fPgwoUUx6d6TeQFZltHc3Bzz7RB2rLW1FW/fvk1YJqRkT4oZHovFApfLBZPJFLMohkIh1NbW4sePH6rL8H8SQKQUCgoKUF9fH9Mp8jyPb9++ob6+XgGjZ1FMahFUK4qiKKK0tBRHjhxRIKgVxf7+frS3t+suhaQXwVhyOHbsGBYuXDgthFu3buH+/fu6FkXNAEKhUEJ6MiuIZrM55ttdkU7R6XTi1atXqhDYeaFQSH8AXV1dCXlTgy2jnzx5grGxsZhvi7Fjv3//Rk1NDb5//x4lB2a779y5o12GWt8UHRgYgCAIyM/Ph8Fg0AUEe8LU19cHp9M5451jsILBIAYGBrB27VosWbJE+fzXr1/o6uqC1+vVnKlc+r/G5vlIA0gDSANIA0gDSANIA5i/4z/MGhVhy+l1TAAAAABJRU5ErkJggg==">
+<style>
+  :root {
+    --ink: #14201c;          /* KPK wordmark */
+    --charcoal: #232323;
+    --line-dark: #323232;
+    --grey: #6b6b6b;
+    --silver: #bdbdbd;
+    --paper: #eeeeee;
+    --card: #ffffff;
+    --rule: #dcdcdc;
+    --ok: #2d6a4f;
+    --warn: #8a6100;
+    --err: #9b2c24;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--paper); color: var(--ink);
+         font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  a { color: var(--ink); }
+  code, .mono { font-family: var(--mono); font-size: .9em; }
+
+  /* header: the KPK rectangle grid */
+  header { position: relative; overflow: hidden; background: var(--charcoal); color: var(--paper);
+           background-image:
+             linear-gradient(var(--line-dark) 1px, transparent 1px),
+             linear-gradient(90deg, var(--line-dark) 1px, transparent 1px);
+           background-size: 100% 64px, 16.666% 100%; }
+  header .cell { position: absolute; height: 64px; }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 0 24px; }
+  header .wrap { position: relative; padding-top: 40px; padding-bottom: 56px; }
+  .wordmark { height: 26px; display: block; margin-bottom: 56px; }
+  .eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: 12px; color: var(--silver); margin: 0 0 10px; }
+  h1 { font-size: clamp(26px, 4.4vw, 38px); line-height: 1.15; margin: 0 0 18px; font-weight: 600; letter-spacing: -.01em; }
+  .lede { font-size: 18px; color: #d6d6d6; margin: 0; max-width: 640px; }
+
+  main .wrap { padding-top: 40px; padding-bottom: 72px; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .12em; color: var(--grey);
+       margin: 48px 0 14px; font-weight: 600; }
+  h2:first-child { margin-top: 0; }
+  p { margin: 0 0 14px; }
+
+  .accounts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 14px; }
+  .card { background: var(--card); border: 1px solid var(--rule); border-radius: 4px; padding: 20px 22px; }
+  .card h3 { margin: 0 0 4px; font-size: 17px; }
+  .card .role { color: var(--grey); font-size: 14px; margin: 0 0 14px; }
+  .addr { font-family: var(--mono); font-size: 13px; word-break: break-all; background: var(--paper);
+          padding: 8px 10px; border-radius: 3px; margin: 0 0 10px; }
+  .facts { list-style: none; margin: 0; padding: 0; font-size: 14px; }
+  .facts li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-top: 1px solid var(--rule); }
+  .facts li span:last-child { text-align: right; }
+  .links { font-size: 13px; margin-top: 10px; }
+  .links a { margin-right: 14px; }
+
+  .split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 14px; }
+  .split .card h3 { font-size: 15px; margin-bottom: 10px; }
+  .split ul { margin: 0; padding-left: 18px; font-size: 15px; }
+  .split li { margin-bottom: 6px; }
+
+  .verify { border-left: 3px solid var(--ink); background: var(--card); padding: 16px 20px; margin: 18px 0; }
+  .verify dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; margin: 10px 0 0; font-size: 14px; }
+  .verify dt { color: var(--grey); }
+  .verify dd { margin: 0; font-family: var(--mono); font-size: 13px; word-break: break-all; }
+
+  /* the tool */
+  .tool { background: var(--card); border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
+  .step { display: grid; grid-template-columns: 34px 1fr; gap: 14px; padding: 20px 22px; border-top: 1px solid var(--rule); }
+  .step:first-child { border-top: 0; }
+  .num { width: 30px; height: 30px; border-radius: 50%; background: var(--charcoal); color: var(--paper);
+         display: grid; place-items: center; font-size: 14px; font-weight: 600; }
+  .step h3 { margin: 3px 0 8px; font-size: 16px; }
+  .step p { font-size: 15px; color: #333; }
+  button { font: inherit; font-size: 15px; font-weight: 600; background: var(--charcoal); color: var(--paper);
+           border: 0; border-radius: 3px; padding: 11px 20px; cursor: pointer; }
+  button:hover:not(:disabled) { background: var(--ink); }
+  button:disabled { opacity: .35; cursor: not-allowed; }
+  button.ghost { background: transparent; color: var(--ink); border: 1px solid var(--silver); font-weight: 500; }
+  .acct { font-family: var(--mono); font-size: 13px; margin-left: 12px; color: var(--grey); word-break: break-all; }
+  .checks { list-style: none; margin: 4px 0 0; padding: 0; font-size: 14.5px; }
+  .checks li { display: grid; grid-template-columns: 22px 1fr; gap: 8px; padding: 7px 0; border-top: 1px solid var(--rule); }
+  .checks li:first-child { border-top: 0; }
+  .mark { font-weight: 700; text-align: center; }
+  .ok .mark { color: var(--ok); }  .warn .mark { color: var(--warn); }
+  .err .mark { color: var(--err); } .wait .mark { color: var(--silver); }
+  .checks .detail { color: var(--grey); font-size: 13.5px; }
+  .result { margin-top: 14px; padding: 14px 16px; border-radius: 3px; font-size: 15px; display: none; }
+  .result.show { display: block; }
+  .result.ok { background: #e3efe8; color: var(--ok); }
+  .result.err { background: #f6e3e1; color: var(--err); }
+  .result pre { white-space: pre-wrap; word-break: break-all; font-family: var(--mono); font-size: 12px;
+                background: #fff; padding: 10px; border-radius: 3px; margin: 10px 0 0; color: var(--ink); }
+
+  footer { border-top: 1px solid var(--rule); padding: 28px 0 48px; font-size: 13.5px; color: var(--grey); }
+  footer p { margin: 0 0 8px; }
+
+  @media (max-width: 560px) {
+    .wordmark { margin-bottom: 40px; }
+    header .wrap { padding-bottom: 40px; }
+    .step { grid-template-columns: 1fr; gap: 10px; }
+    .acct { display: block; margin: 10px 0 0; }
+    .addr { font-size: 11px; padding: 8px; letter-spacing: -.01em; }
+    .verify dd { font-size: 11.5px; }
+    .verify dl { grid-template-columns: 1fr; gap: 2px; }
+    .verify dd { margin-bottom: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="cell" style="top:64px;left:66.666%;width:16.666%;background:#bdbdbd;opacity:.18"></div>
+  <div class="cell" style="top:128px;left:0;width:16.666%;background:#6b6b6b;opacity:.35"></div>
+  <div class="cell" style="bottom:0;left:83.333%;width:16.666%;background:#eeeeee;opacity:.10"></div>
+  <div class="wrap">
+    <img class="wordmark" alt="KPK" src="data:image/png;base64,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">
+    <p class="eyebrow">ENS Foundation Safe</p>
+    <h1>Register KPK's proposer on the ENS Foundation Safe</h1>
+    <p class="lede">This page adds one address as a <strong>proposer</strong> on the ENS Foundation Safe. A
+      proposer can place transactions in the Safe's queue for its signers to review. It cannot sign,
+      approve or execute them, and it has no access to funds.</p>
+  </div>
+</header>
+
+<main><div class="wrap">
+
+  <h2>The two accounts</h2>
+  <div class="accounts">
+    <div class="card">
+      <h3>ENS Foundation Safe</h3>
+      <p class="role">Receives the proposer. Nothing else about it changes.</p>
+      <p class="addr">0x9C7dB6B1085ec4D07f75c0BD91AD3FcD368fA19E</p>
+      <ul class="facts">
+        <li><span>Signatures required</span><span id="f-threshold">loading…</span></li>
+        <li><span>Safe version</span><span id="f-version">…</span></li>
+        <li><span>Proposers today</span><span id="f-proposers">…</span></li>
+      </ul>
+      <div class="links">
+        <a href="https://etherscan.io/address/0x9C7dB6B1085ec4D07f75c0BD91AD3FcD368fA19E" target="_blank" rel="noopener">Etherscan</a>
+        <a href="https://app.safe.global/home?safe=eth:0x9C7dB6B1085ec4D07f75c0BD91AD3FcD368fA19E" target="_blank" rel="noopener">Safe{Wallet}</a>
+      </div>
+    </div>
+    <div class="card">
+      <h3>ENS Proposer - KPK managed</h3>
+      <p class="role">The proposer being added. A Safe, operated by KPK.</p>
+      <p class="addr">0xB1C6402137A3531c9E2d63985E0B76968C8243E8</p>
+      <ul class="facts">
+        <li><span>Signatures required</span><span id="p-threshold">loading…</span></li>
+        <li><span>Modules / guard</span><span id="p-config">…</span></li>
+        <li><span>Balance</span><span id="p-balance">…</span></li>
+      </ul>
+      <div class="links">
+        <a href="https://etherscan.io/address/0xB1C6402137A3531c9E2d63985E0B76968C8243E8" target="_blank" rel="noopener">Etherscan</a>
+        <a href="https://app.safe.global/home?safe=eth:0xB1C6402137A3531c9E2d63985E0B76968C8243E8" target="_blank" rel="noopener">Safe{Wallet}</a>
+      </div>
+    </div>
+  </div>
+
+  <h2>What changes, and what does not</h2>
+  <div class="split">
+    <div class="card">
+      <h3>Changes</h3>
+      <ul>
+        <li>The Foundation Safe gains one proposer: the KPK proposer Safe.</li>
+        <li>KPK can place transactions in the Foundation Safe's queue. They appear as proposed by
+          "ENS Proposer - KPK managed".</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Does not change</h3>
+      <ul>
+        <li>The owners, the 3-of-5 threshold, the modules and the guard.</li>
+        <li><strong>Every transaction still needs three Foundation signatures</strong> before it can execute.</li>
+        <li>Nothing is sent on-chain. There is no gas fee.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Why the proposer is a Safe</h2>
+  <p>The proposer is a Safe with six signers, two of which must agree: the five KPK signers of the
+    Endowment's Manager Safe and the KPK Security Council Safe. KPK can change who proposes by changing
+    those signers, without asking the Foundation to sign again. The proposer Safe holds no funds, has no
+    modules and owns no other account. Proposing is its only role.</p>
+
+  <h2>Why this page, rather than Safe{Wallet}</h2>
+  <p>Safe{Wallet} does not accept a smart contract account as a proposer, and shows "Cannot add a smart
+    contract account as proposer". Safe's Transaction Service, which stores proposers and serves them to
+    Safe{Wallet}, does accept one when a current owner of the Safe signs for it. This page sends that
+    signature to the Transaction Service directly. KPK registered and used a Safe proposer this way on
+    Ethereum on 10 November 2026: Safe{Wallet} listed it as a proposer and showed its proposal in the
+    queue.</p>
+
+  <h2>Register the proposer</h2>
+  <div class="tool">
+    <div class="step">
+      <div class="num">1</div>
+      <div>
+        <h3>Connect an owner of the Foundation Safe</h3>
+        <p>Use a wallet that signs for the Foundation Safe today, and that will stay a signer: the
+          registration is linked to the owner who signs it.</p>
+        <button id="connect">Connect wallet</button><span class="acct" id="acct"></span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="num">2</div>
+      <div>
+        <h3>Checks</h3>
+        <ul class="checks" id="checks"></ul>
+      </div>
+    </div>
+    <div class="step">
+      <div class="num">3</div>
+      <div>
+        <h3>Sign and register</h3>
+        <p>Your wallet asks for a <strong>signature, not a transaction</strong>. Before you sign, check
+          that it shows a message of type <code>Delegate</code> with these values:</p>
+        <div class="verify">
+          <strong>In your wallet</strong>
+          <dl>
+            <dt>delegateAddress</dt><dd>0xB1C6402137A3531c9E2d63985E0B76968C8243E8</dd>
+            <dt>totp</dt><dd>a number for the current hour; the signature is accepted for about an hour</dd>
+            <dt>chainId</dt><dd>1 (Ethereum)</dd>
+          </dl>
+        </div>
+        <button id="sign" disabled>Sign and register</button>
+        <div class="result" id="result"></div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Afterwards</h2>
+  <p>Transactions proposed by KPK appear in the Foundation Safe's queue, marked as proposed by the KPK
+    proposer Safe. Each one needs three of five Foundation signatures to execute, as any transaction
+    does today.</p>
+  <p>Any owner of the Foundation Safe can remove the proposer at any time in Safe{Wallet}, under
+    Settings, Proposers. If the owner who signs here later leaves the Foundation Safe, the proposer
+    stops working, and an owner who remains needs to sign this page again.</p>
+
+  <footer>
+    <p>This page holds no keys and stores nothing. It reads the two Safes from Safe's Transaction Service
+      (<span class="mono">api.safe.global</span>), reads the proposer Safe's balance from a public Ethereum
+      node (<span class="mono">ethereum-rpc.publicnode.com</span>), and sends your signature to the
+      Transaction Service. It makes no other requests.</p>
+    <p>Prepared by KPK. Questions: contact your KPK point of contact before signing.</p>
+  </footer>
+
+</div></main>
+
+<script>
+const API = "https://api.safe.global/tx-service/eth/api";
+const RPC = "https://ethereum-rpc.publicnode.com";
+const CHAIN_ID = 1;
+const FOUNDATION = "0x9C7dB6B1085ec4D07f75c0BD91AD3FcD368fA19E";
+const PROPOSER   = "0xB1C6402137A3531c9E2d63985E0B76968C8243E8";
+const LABEL      = "ENS Proposer - KPK managed";
+const ZERO       = "0x0000000000000000000000000000000000000000";
+// What this page was prepared against (2026-11-19). A live value that differs is flagged.
+const EXPECT = { foundation: { threshold: 3, owners: 5 }, proposer: { threshold: 2, owners: 6 } };
+
+const $ = (id) => document.getElementById(id);
+const short = (a) => a.slice(0, 6) + "…" + a.slice(-4);
+const state = { foundation: null, proposer: null, balanceWei: null, delegates: null, account: null, error: null };
+
+// The Transaction Service is public and rate-limited: retry 429 and 5xx with backoff.
+async function fetchRetry(url, opts = {}, tries = 5) {
+  for (let i = 0; ; i++) {
+    const res = await fetch(url, { cache: "no-store", ...opts });
+    if ((res.status !== 429 && res.status < 500) || i === tries - 1) return res;
+    const after = parseInt(res.headers.get("Retry-After") || "", 10);
+    await new Promise((r) => setTimeout(r, (after > 0 ? Math.min(after, 10) : 1.5 * 2 ** i) * 1000));
+  }
+}
+async function getJSON(url) {
+  const res = await fetchRetry(url);
+  if (!res.ok) throw new Error(url.replace(API, "") + " returned HTTP " + res.status);
+  return res.json();
+}
+
+async function load() {
+  state.error = null;
+  $("checks").innerHTML = '<li class="wait"><span class="mark">·</span><span>Reading the Safes…</span></li>';
+  try {
+    state.foundation = await getJSON(`${API}/v1/safes/${FOUNDATION}/`);
+    state.proposer = await getJSON(`${API}/v1/safes/${PROPOSER}/`);
+    state.delegates = (await getJSON(`${API}/v2/delegates/?safe=${FOUNDATION}`)).results || [];
+  } catch (e) { state.error = "Could not read the Safes from the Transaction Service: " + e.message; }
+  try {
+    const r = await fetch(RPC, { method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "eth_getBalance", params: [PROPOSER, "latest"] }) });
+    state.balanceWei = BigInt((await r.json()).result);
+  } catch (e) { state.balanceWei = null; }
+  render();
+}
+
+function registered() {
+  return (state.delegates || []).some((x) => x.delegate.toLowerCase() === PROPOSER.toLowerCase());
+}
+function isOwner() {
+  return !!(state.account && state.foundation &&
+    state.foundation.owners.some((o) => o.toLowerCase() === state.account.toLowerCase()));
+}
+
+function render() {
+  const f = state.foundation, p = state.proposer;
+  if (f) {
+    $("f-threshold").textContent = `${f.threshold} of ${f.owners.length}`;
+    $("f-version").textContent = f.version || "unknown";
+    $("f-proposers").textContent = state.delegates.length
+      ? state.delegates.map((x) => (x.label || short(x.delegate))).join(", ") : "none";
+  }
+  if (p) {
+    $("p-threshold").textContent = `${p.threshold} of ${p.owners.length}`;
+    const clean = (p.modules || []).length === 0 && (!p.guard || p.guard === ZERO);
+    $("p-config").textContent = clean ? "none" : "present: check with KPK";
+  }
+  $("p-balance").textContent = state.balanceWei === null ? "unavailable"
+    : state.balanceWei === 0n ? "0 ETH" : (Number(state.balanceWei) / 1e18).toFixed(6) + " ETH";
+
+  const items = [];
+  const add = (cls, text, detail) => items.push({ cls, text, detail });
+  if (state.error) add("err", "Safe data unavailable",
+    state.error + ' <button class="ghost" style="margin-top:8px;padding:6px 12px;font-size:13px" onclick="load()">Try again</button>');
+  if (f) {
+    const same = f.threshold === EXPECT.foundation.threshold && f.owners.length === EXPECT.foundation.owners;
+    add(same ? "ok" : "warn", `Foundation Safe found: ${f.threshold} of ${f.owners.length} signatures`,
+        same ? "" : `This page was prepared for 3 of 5. Confirm the change with KPK before signing.`);
+  }
+  if (p) {
+    const same = p.threshold === EXPECT.proposer.threshold && p.owners.length === EXPECT.proposer.owners;
+    const clean = (p.modules || []).length === 0 && (!p.guard || p.guard === ZERO);
+    add(same && clean ? "ok" : "warn",
+        `KPK proposer Safe found: ${p.threshold} of ${p.owners.length}, ${clean ? "no modules, no guard" : "modules or a guard present"}`,
+        same && clean ? "" : "This differs from what the page was prepared for. Confirm with KPK before signing.");
+  }
+  if (f && p) {
+    if (registered()) add("ok", "The KPK proposer is registered on the Foundation Safe", "Nothing left to do.");
+    else add("wait", "The KPK proposer is not registered yet", "");
+  }
+  if (!state.account) add("wait", "Connect a wallet to check it is a Foundation owner", "");
+  else if (!f) add("wait", "Waiting for the Foundation Safe's owner list", "");
+  else if (isOwner()) add("ok", `Your wallet ${short(state.account)} is an owner of the Foundation Safe`, "");
+  else add("err", `Your wallet ${short(state.account)} is not an owner of the Foundation Safe`,
+           "Only a Foundation owner can register the proposer. Switch accounts in your wallet.");
+
+  $("checks").innerHTML = items.map((i) =>
+    `<li class="${i.cls}"><span class="mark">${{ ok: "✓", warn: "!", err: "✕", wait: "·" }[i.cls]}</span>` +
+    `<span>${i.text}${i.detail ? `<br><span class="detail">${i.detail}</span>` : ""}</span></li>`).join("");
+
+  $("sign").disabled = !(f && p && isOwner() && !registered());
+}
+
+function showResult(cls, html) { const r = $("result"); r.className = "result show " + cls; r.innerHTML = html; }
+
+async function connect() {
+  if (!window.ethereum) {
+    showResult("err", "No browser wallet found. Open this page in a browser with MetaMask, Rabby or a similar wallet installed.");
+    return;
+  }
+  try {
+    const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+    state.account = accounts[0] || null;
+    $("acct").textContent = state.account || "";
+    render();
+  } catch (e) { showResult("err", "The wallet did not connect: " + (e.message || e)); }
+}
+
+async function ensureMainnet() {
+  const cur = await window.ethereum.request({ method: "eth_chainId" });
+  if (parseInt(cur, 16) === CHAIN_ID) return;
+  await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: "0x1" }] });
+}
+
+async function sign() {
+  $("sign").disabled = true;
+  // The Transaction Service rejects lowercase addresses; take the owner's checksummed spelling
+  // from the Safe's own owner list rather than the wallet's lowercased account.
+  const delegator = state.foundation.owners.find((o) => o.toLowerCase() === state.account.toLowerCase());
+  let signature, payload;
+  try {
+    await ensureMainnet();
+    const typedData = {
+      types: {
+        EIP712Domain: [
+          { name: "name", type: "string" },
+          { name: "version", type: "string" },
+          { name: "chainId", type: "uint256" },
+        ],
+        Delegate: [
+          { name: "delegateAddress", type: "address" },
+          { name: "totp", type: "uint256" },
+        ],
+      },
+      primaryType: "Delegate",
+      domain: { name: "Safe Transaction Service", version: "1.0", chainId: CHAIN_ID },
+      message: { delegateAddress: PROPOSER, totp: Math.floor(Date.now() / 1000 / 3600) },
+    };
+    signature = await window.ethereum.request({
+      method: "eth_signTypedData_v4", params: [state.account, JSON.stringify(typedData)] });
+  } catch (e) {
+    showResult("err", "No signature was produced: " + (e.message || e) + ". Nothing was registered.");
+    render(); return;
+  }
+
+  payload = { safe: FOUNDATION, delegate: PROPOSER, delegator, signature, label: LABEL };
+  try {
+    const res = await fetchRetry(`${API}/v2/delegates/`, {
+      method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
+    if (!res.ok) throw new Error("HTTP " + res.status + ": " + (await res.text()).slice(0, 400));
+    showResult("ok", "<strong>Registered.</strong> The KPK proposer Safe is now a proposer on the ENS Foundation Safe. " +
+      "It appears in Safe{Wallet} under Settings, Proposers.");
+  } catch (e) {
+    showResult("err", "The signature was produced but the Transaction Service did not accept it (" + e.message + "). " +
+      "Nothing was registered. Send the details below to KPK; they stay valid for about an hour." +
+      "<pre>" + JSON.stringify(payload, null, 2).replace(/</g, "&lt;") + "</pre>");
+  }
+  await load();
+}
+
+$("connect").onclick = connect;
+$("sign").onclick = sign;
+if (window.ethereum && window.ethereum.on) {
+  window.ethereum.on("accountsChanged", (a) => { state.account = a[0] || null; $("acct").textContent = state.account || ""; render(); });
+}
+render();
+load();
+</script>
+</body>
+</html>
