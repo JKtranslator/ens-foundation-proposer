@@ -190,9 +190,9 @@
 
   <h2>Why this page, rather than Safe{Wallet}</h2>
   <p>Safe{Wallet} does not accept a smart contract account as a proposer, and shows "Cannot add a smart
-    contract account as proposer". Safe's Transaction Service, which stores proposers and serves them to
-    Safe{Wallet}, does accept one when a current owner of the Safe signs for it. This page sends that
-    signature to the Transaction Service directly. KPK registered and used a Safe proposer this way on
+    contract account as proposer". Safe's Queue Service, which stores proposers and serves them to
+    Safe{Wallet} (it took them over from the Transaction Service in November 2026), accepts the registration
+    when a current owner of the Safe signs for it. This page sends that signature to it directly. KPK registered and used a Safe proposer this way on
     Ethereum on 10 November 2026: Safe{Wallet} listed it as a proposer and showed its proposal in the
     queue.</p>
 
@@ -225,7 +225,10 @@
           <dl>
             <dt>delegateAddress</dt><dd>0xB1C6402137A3531c9E2d63985E0B76968C8243E8</dd>
             <dt>totp</dt><dd>a number for the current hour; the signature is accepted for about an hour</dd>
+            <dt>action</dt><dd>add</dd>
+            <dt>name</dt><dd>Safe Queue Service</dd>
             <dt>chainId</dt><dd>1 (Ethereum)</dd>
+            <dt>safe</dt><dd>0x9C7dB6B1085ec4D07f75c0BD91AD3FcD368fA19E (the Foundation Safe)</dd>
           </dl>
         </div>
         <button id="sign" disabled>Sign and register</button>
@@ -243,17 +246,20 @@
     stops working, and an owner who remains needs to sign this page again.</p>
 
   <footer>
-    <p>This page holds no keys and stores nothing. It reads the two Safes from Safe's Transaction Service
-      (<span class="mono">api.safe.global</span>), reads the proposer Safe's balance from a public Ethereum
-      node (<span class="mono">ethereum-rpc.publicnode.com</span>), and sends your signature to the
-      Transaction Service. It makes no other requests.</p>
+    <p>This page holds no keys and stores nothing. It reads the two Safes from Safe's Transaction Service and the
+      Foundation's proposers from Safe's Queue Service (both <span class="mono">api.safe.global</span>), reads the
+      proposer Safe's balance from a public Ethereum node (<span class="mono">ethereum-rpc.publicnode.com</span>),
+      and sends your signature to the Queue Service. It makes no other requests.</p>
     <p>Prepared by KPK. Questions: contact your KPK point of contact before signing.</p>
   </footer>
 
 </div></main>
 
 <script>
+// Safe info (owners, threshold) from the Transaction Service; proposers (delegates) from the Safe Queue Service,
+// where Safe moved them in its 2026-11 migration (one base for every chain, no trailing slashes).
 const API = "https://api.safe.global/tx-service/eth/api";
+const QUEUE = "https://api.safe.global/queue/api/v1";
 const RPC = "https://ethereum-rpc.publicnode.com";
 const CHAIN_ID = 1;
 const FOUNDATION = "0x9C7dB6B1085ec4D07f75c0BD91AD3FcD368fA19E";
@@ -267,7 +273,7 @@ const $ = (id) => document.getElementById(id);
 const short = (a) => a.slice(0, 6) + "…" + a.slice(-4);
 const state = { foundation: null, proposer: null, balanceWei: null, delegates: null, account: null, error: null };
 
-// The Transaction Service is public and rate-limited: retry 429 and 5xx with backoff.
+// Safe's services are public and rate-limited: retry 429 and 5xx with backoff.
 async function fetchRetry(url, opts = {}, tries = 5) {
   for (let i = 0; ; i++) {
     const res = await fetch(url, { cache: "no-store", ...opts });
@@ -278,7 +284,7 @@ async function fetchRetry(url, opts = {}, tries = 5) {
 }
 async function getJSON(url) {
   const res = await fetchRetry(url);
-  if (!res.ok) throw new Error(url.replace(API, "") + " returned HTTP " + res.status);
+  if (!res.ok) throw new Error(url.replace(API, "").replace(QUEUE, "") + " returned HTTP " + res.status);
   return res.json();
 }
 
@@ -288,8 +294,9 @@ async function load() {
   try {
     state.foundation = await getJSON(`${API}/v1/safes/${FOUNDATION}/`);
     state.proposer = await getJSON(`${API}/v1/safes/${PROPOSER}/`);
-    state.delegates = (await getJSON(`${API}/v2/delegates/?safe=${FOUNDATION}`)).results || [];
-  } catch (e) { state.error = "Could not read the Safes from the Transaction Service: " + e.message; }
+    // the Foundation's proposers on Ethereum (scoped to this Safe and chain); addresses come back lowercase
+    state.delegates = (await getJSON(`${QUEUE}/delegates?safe=${FOUNDATION}&chainId=${CHAIN_ID}&limit=100`)).results || [];
+  } catch (e) { state.error = "Could not read the Safes from Safe's services: " + e.message; }
   try {
     const r = await fetch(RPC, { method: "POST", headers: { "content-type": "application/json" },
       body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "eth_getBalance", params: [PROPOSER, "latest"] }) });
@@ -299,7 +306,10 @@ async function load() {
 }
 
 function registered() {
-  return (state.delegates || []).some((x) => x.delegate.toLowerCase() === PROPOSER.toLowerCase());
+  // registered, and by someone who is still a Foundation owner (a delegate whose delegator left is dead)
+  const owners = ((state.foundation && state.foundation.owners) || []).map((o) => o.toLowerCase());
+  return (state.delegates || []).some((x) => x.delegate.toLowerCase() === PROPOSER.toLowerCase() &&
+    (!owners.length || owners.includes(String(x.delegator || "").toLowerCase())));
 }
 function isOwner() {
   return !!(state.account && state.foundation &&
@@ -378,27 +388,31 @@ async function ensureMainnet() {
 
 async function sign() {
   $("sign").disabled = true;
-  // The Transaction Service rejects lowercase addresses; take the owner's checksummed spelling
-  // from the Safe's own owner list rather than the wallet's lowercased account.
+  // Take the owner's checksummed spelling from the Safe's own owner list rather than the wallet's
+  // lowercased account (the Queue Service accepts either; the curl fallback reads better).
   const delegator = state.foundation.owners.find((o) => o.toLowerCase() === state.account.toLowerCase());
   let signature, payload;
   try {
     await ensureMainnet();
+    // Safe Queue Service Delegate typed data, scoped to the Foundation Safe on Ethereum: the domain's chainId and
+    // safe match the chainId and safe sent in the body (0 / the zero address would mean every chain / every Safe).
     const typedData = {
       types: {
         EIP712Domain: [
           { name: "name", type: "string" },
           { name: "version", type: "string" },
           { name: "chainId", type: "uint256" },
+          { name: "safe", type: "address" },
         ],
         Delegate: [
           { name: "delegateAddress", type: "address" },
           { name: "totp", type: "uint256" },
+          { name: "action", type: "string" },
         ],
       },
       primaryType: "Delegate",
-      domain: { name: "Safe Transaction Service", version: "1.0", chainId: CHAIN_ID },
-      message: { delegateAddress: PROPOSER, totp: Math.floor(Date.now() / 1000 / 3600) },
+      domain: { name: "Safe Queue Service", version: "1.0", chainId: CHAIN_ID, safe: FOUNDATION },
+      message: { delegateAddress: PROPOSER, totp: Math.floor(Date.now() / 1000 / 3600), action: "add" },
     };
     signature = await window.ethereum.request({
       method: "eth_signTypedData_v4", params: [state.account, JSON.stringify(typedData)] });
@@ -407,15 +421,21 @@ async function sign() {
     render(); return;
   }
 
-  payload = { safe: FOUNDATION, delegate: PROPOSER, delegator, signature, label: LABEL };
+  payload = { chainId: CHAIN_ID, safe: FOUNDATION, delegate: PROPOSER, delegator, signature, label: LABEL };
   try {
-    const res = await fetchRetry(`${API}/v2/delegates/`, {
+    const res = await fetchRetry(`${QUEUE}/delegates`, {
       method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
+    if (res.status === 409) {
+      // the Queue Service does not overwrite: this owner already registered this proposer on this Safe
+      showResult("ok", "<strong>Already registered.</strong> The KPK proposer Safe was already a proposer on the ENS Foundation Safe " +
+        "(registered by this owner). Nothing changed.");
+      await load(); return;
+    }
     if (!res.ok) throw new Error("HTTP " + res.status + ": " + (await res.text()).slice(0, 400));
     showResult("ok", "<strong>Registered.</strong> The KPK proposer Safe is now a proposer on the ENS Foundation Safe. " +
       "It appears in Safe{Wallet} under Settings, Proposers.");
   } catch (e) {
-    showResult("err", "The signature was produced but the Transaction Service did not accept it (" + e.message + "). " +
+    showResult("err", "The signature was produced but Safe's Queue Service did not accept it (" + e.message + "). " +
       "Nothing was registered. Send the details below to KPK; they stay valid for about an hour." +
       "<pre>" + JSON.stringify(payload, null, 2).replace(/</g, "&lt;") + "</pre>");
   }

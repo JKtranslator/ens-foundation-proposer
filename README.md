@@ -13,9 +13,12 @@ proposer, by signing one message in a browser wallet.
 A proposer can place transactions in the Safe's queue for its signers to review. It cannot sign,
 approve or execute them. Nothing is sent on-chain and there is no gas fee.
 
-Safe{Wallet} does not accept a smart contract account as a proposer. Safe's Transaction Service
-does, when a current owner of the Safe signs for it; the page sends that signature to the
-Transaction Service directly (`POST /api/v2/delegates/`).
+Safe{Wallet} does not accept a smart contract account as a proposer. Safe's Queue Service, which
+took proposers over from the Transaction Service in November 2026, does when a current owner of the
+Safe signs for it; the page sends that signature to it directly (`POST
+https://api.safe.global/queue/api/v1/delegates`, typed data domain `{name: "Safe Queue Service",
+version: "1.0", chainId: 1, safe: <Foundation Safe>}`, message `{delegateAddress, totp, action: "add"}`;
+a 409 means the proposer is already registered by that owner).
 
 The page is one self-contained HTML file. It holds no keys, stores nothing, and talks only to
 `api.safe.global` and a public Ethereum node. The two addresses are fixed in the file, so a link
